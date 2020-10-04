@@ -52,7 +52,7 @@ int main ()
         
     } while (!acertou && !enforcou);
     
-
+   
     return 0;
 }
 
