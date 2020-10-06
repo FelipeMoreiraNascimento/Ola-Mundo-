@@ -1,4 +1,4 @@
-11
+12
 melancia
 melao
 morango
@@ -10,3 +10,4 @@ amora
 ameixa
 goiaba
 manga
+jaca
