@@ -41,16 +41,6 @@ int jachutou(char letra)
 
 void desenhaforca() 
 {   
-    printf("        _________     \n");
-    printf("       |         |    \n");
-    printf("       |        (_)   \n");
-    printf("       |        \\|/  \n");
-    printf("       |         |    \n");
-    printf("       |        / \|  \n");
-    printf("       |              \n");
-    printf("      _|__            \n");
-
-
     for (int i = 0; i < strlen(palavrasecreta); i++)
     {
         int achou = jachutou(palavrasecreta[i]);
@@ -93,27 +83,6 @@ void escolhepalavra()
     fclose(f);
 }
 
-int chuteserrados()
-{
-    int erros =0;
-    for (int i = 0; i < chutesdados; i++)
-    {
-        int existe = 0;
-
-        for (int j = 0; j < strlen(palavrasecreta); j++)
-        {
-            if (chutes[i] == palavrasecreta[j])
-            {
-                existe = 1;
-                break;
-            }          
-        } 
-        if(!existe) erros++;
-    }
-
-    return erros;
-}
-
 int enforcou()
 {
     int erros =0;
@@ -131,7 +100,7 @@ int enforcou()
         } 
         if(!existe) erros++;
     }
-    return chuteserrados >= 5;   
+    return erros >= 5;   
 }
 
 int acertou() 
@@ -210,7 +179,4 @@ int main ()
     }
     
     adicionapalavra();
-    
-
-
 }
