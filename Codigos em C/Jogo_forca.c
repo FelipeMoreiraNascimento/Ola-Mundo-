@@ -40,21 +40,31 @@ int jachutou(char letra)
 }
 
 void desenhaforca() 
-{
-        for (int i = 0; i < strlen(palavrasecreta); i++)
+{   
+    printf("        _________     \n");
+    printf("       |         |    \n");
+    printf("       |        (_)   \n");
+    printf("       |        \\|/  \n");
+    printf("       |         |    \n");
+    printf("       |        / \|  \n");
+    printf("       |              \n");
+    printf("      _|__            \n");
+
+
+    for (int i = 0; i < strlen(palavrasecreta); i++)
+    {
+        int achou = jachutou(palavrasecreta[i]);
+        
+        if (achou)
         {
-            int achou = jachutou(palavrasecreta[i]);
-           
-            if (achou)
-            {
-                printf("%c ", palavrasecreta[i]);
-            }
-            else
-            {
-                printf("_ ");
-            }            
+            printf("%c ", palavrasecreta[i]);
         }
-        printf("\n");
+        else
+        {
+            printf("_ ");
+        }            
+    }
+    printf("\n");
 }
 
 void escolhepalavra()
@@ -83,6 +93,27 @@ void escolhepalavra()
     fclose(f);
 }
 
+int chuteserrados()
+{
+    int erros =0;
+    for (int i = 0; i < chutesdados; i++)
+    {
+        int existe = 0;
+
+        for (int j = 0; j < strlen(palavrasecreta); j++)
+        {
+            if (chutes[i] == palavrasecreta[j])
+            {
+                existe = 1;
+                break;
+            }          
+        } 
+        if(!existe) erros++;
+    }
+
+    return erros;
+}
+
 int enforcou()
 {
     int erros =0;
@@ -100,7 +131,7 @@ int enforcou()
         } 
         if(!existe) erros++;
     }
-    return erros >= 5;   
+    return chuteserrados >= 5;   
 }
 
 int acertou() 
@@ -166,6 +197,20 @@ int main ()
         
     } while (!acertou() && !enforcou());
     
+    if (acertou)
+    {
+        printf("\n%s\n",palavrasecreta);
+        printf("Parabens voce ganhou!!!!!\n\n\n");
+        printf("\n");
+    } 
+    else
+    {
+        printf("Você perdeu!!!!\n");
+        printf("A palavra secreta era **%s**\n\n",palavrasecreta);
+    }
     
     adicionapalavra();
+    
+
+
 }
