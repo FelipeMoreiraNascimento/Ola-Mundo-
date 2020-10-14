@@ -2,61 +2,130 @@
 #include<stdlib.h>
 #include "fogefoge.h"
 #include "mapa.h"
+#include<time.h>
 
 MAPA m;
 POSICAO heroi;
+
+int praondeofantasmavai(int xatual, int yatual, int* xdestino, int*ydestino)
+{
+    int opcoes[4][2]={
+        { xatual, yatual +1},
+        { xatual +1, yatual},
+        { xatual, yatual -1},
+        { xatual -1, yatual}
+    };
+    
+    srand(time(0));
+    for (int i = 0; i < 10; i++)
+    {
+        int posicao = rand() % 4;
+
+        if (ehvalida(&m, opcoes[posicao][0], opcoes[posicao][1])
+                &&ehvazia(&m, opcoes[posicao][0], opcoes[posicao][1]))
+        {
+            *xdestino = opcoes[posicao][0];
+            *ydestino = opcoes[posicao][1];
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void fantasmas() 
+{
+    MAPA copia;
+
+    copiamapa(&copia, &m);
+    for (int i = 0; i < m.linhas; i++)
+    {
+        for (int j = 0; j < m.colunas; j++)
+        {
+            if (copia.matriz[i][j]== FANTASMA)
+            {
+                int xdestino;
+                int ydestino;
+
+                int encontrou = praondeofantasmavai(i,j, &xdestino, &ydestino);
+
+                if (encontrou)
+                {
+                    andanomapa(&m, i, j, xdestino, ydestino);
+                }
+                
+            }    
+        } 
+    }
+    liberamapa(&copia);
+}
+
 int acabou()
 {
     return 0;
 }
 
+int ehdirecao(char direcao)
+{
+    return direcao == 'a' ||
+        direcao == 'w' ||
+        direcao == 's' ||
+        direcao == 'd';
+}
+
 void move(char direcao)
 {
-    if (direcao!='a' && direcao != 'w' && direcao !='s' && direcao != 'd') return;
+    if (!ehdirecao(direcao)) 
+      {  
+          return;
+      }
     
     int proximox = heroi.x;
     int proximoy = heroi.y;
 
     switch (direcao)
     {
-    case 'a':
+    case ESQUERDA:
         proximoy--;
         break;
-    case 'w':
+    case CIMA:
         proximox--;
         break;
-    case 's':
+    case BAIXO:
         proximox++;
         break;
-    case 'd':
+    case DIREITA:
         proximoy++;
         break;
     } 
 
-    if (proximox >= m.linhas) 
+    if (!ehvalida(&m, proximox, proximoy))
+    {
         return;
-    if (proximoy >=m.colunas) 
+    }
+     
+    if (!ehvazia(&m, proximox, proximoy)) 
+    {
         return;
-    if (m.matriz[proximox][proximoy] !='.') 
-        return;
-    
-    m.matriz[proximox][proximoy] = '@';
-    m.matriz[heroi.x][heroi.y] = '.';
+    }
+
+    andanomapa(&m, heroi.x, heroi.y, proximox, proximoy);
     heroi.x = proximox;
-    heroi.y = proximoy;        
+    heroi.y = proximoy;
+
 }
 
 int main()
 {
     lemapa(&m);
-    encontramapa(&m, &heroi, '@');
-
+    encontramapa(&m, &heroi, HEROI);
+    printf("fogefoge\n\n\n");
     do
     {
         imprimemapa(&m);
         char comando;
         scanf(" %c", &comando);
         move(comando);
+        fantasmas();
     
     }while(!acabou());
     
